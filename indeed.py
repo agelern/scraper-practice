@@ -37,20 +37,25 @@ print('page parsed')
 # find job card titles and urls to job spec
 job_cards = soup.find_all('h2', class_='jobTitle')
 job_page_urls = []
+print('found job cards')
 
 for job_card in job_cards:
     a = job_card.find('a')
     url = f"{domain}{a['href']}"
+    print(url)
     job_page_urls.append(url)
 
 # get job titles
 titles = []
 
 for url in job_page_urls:
+    print(f'about to try connect {url}')
     driver.get(url)
+    print(f'Got the above page. Now waiting...')
     time.sleep(random.randint(15, 30))
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
+    print(f'Parsed the page')
     title = soup.find('h1')
     titles.append(title.text)
     print(title.text, 'done')
