@@ -23,13 +23,16 @@ job = 'data'
 location = 'Guildford'
 domain = 'https://uk.indeed.com'
 url = f'{domain}/jobs?q={job}&l={location}&from=searchOnHP'
+print(f'about to try {url}')
 
 # open webpage
 driver.get(url)
+print(f'opened page')
 
 # parse page
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
+print('page parsed')
 
 # find job card titles and urls to job spec
 job_cards = soup.find_all('h2', class_='jobTitle')
