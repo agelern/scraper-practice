@@ -38,9 +38,11 @@ print('page parsed')
 job_cards = soup.find_all('h2', class_='jobTitle')
 job_page_urls = []
 print('found job cards')
+print(job_cards)
 
 for job_card in job_cards:
     a = job_card.find('a')
+    print(a)
     url = f"{domain}{a['href']}"
     print(url)
     job_page_urls.append(url)
