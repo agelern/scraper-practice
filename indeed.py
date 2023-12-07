@@ -28,12 +28,17 @@ print(f'About to try {url}')
 # open webpage
 driver.get(url)
 print(f'Connected.')
-time.sleep(random.randint(15, 30))
 print(f'Loading page...')
+time.sleep(random.randint(15, 30))
 
 
 # parse page
 html = driver.page_source
+
+with open('home_page.txt', 'w') as f:
+    f.write(html)
+
+
 soup = BeautifulSoup(html, 'html.parser')
 print('page parsed. Now waiting')
 time.sleep(10)
