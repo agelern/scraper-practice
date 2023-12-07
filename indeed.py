@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import time, random
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 
 driver = webdriver.Chrome()
 
