@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-import time, random
+import time, random, undetected_chromedriver
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import logging
@@ -19,7 +19,7 @@ options.add_argument('--headless')
 options.add_argument('--disable-gpu')
 options.add_argument('--allow-running-insecure-content')
 options.add_argument("--headless")
-driver = webdriver.Chrome(options=options)
+driver = undetected_chromedriver.Chrome(options=options)
 
 
 location = 'guildford'
