@@ -37,5 +37,5 @@ def open_webpage(url):
     return driver.page_source
 
 html = open_webpage(search_url)
-with open('/Users/benhurst/Desktop/scraper_practice/out.txt', 'w') as f:
+with open('out.txt', 'w') as f:
     f.write(html)
