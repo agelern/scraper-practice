@@ -11,12 +11,13 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 
 #selenium
 options = Options()
-user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-options.add_argument(f'user-agent={user_agent}')
+# user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+options.add_argument("--start-maximized")
+options.add_argument('--user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"')
 options.add_argument('--no-sandbox')
 options.add_argument('--window-size=1920,1080')
 options.add_argument('--headless')
-options.add_argument('--disable-gpu')
+options.add_argument('--disable-gpu')  
 options.add_argument('--allow-running-insecure-content')
 options.add_argument("--headless")
 driver = undetected_chromedriver.Chrome(options=options)
