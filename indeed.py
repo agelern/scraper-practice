@@ -28,8 +28,7 @@ cur = conn.cursor()
 search_queries = ["data+engineer", "data+analyst", "software+engineer"]
 location = "Guildford"
 domain = "https://uk.indeed.com"
-# 3 or 7
-age = 3
+age = 7
 wait = random.randint(7, 18)
 date = datetime.today().strftime("%Y-%m-%d")
 
@@ -102,10 +101,10 @@ def process_data(soup):
 
 
 def insert_data(table_name, columns: list, data: dict, url, search_query):
-    query = f"""INSERT INTO {table_name} ({', '.join(columns[1:10])}) VALUES ('{data['job_title']}', '{data['company']}', '{data['location']}', '{data['salary_and_type']}', '{data['details']}', '{data['description']}', '{date}', '{search_query}', '{url}') ON CONFLICT (url) DO NOTHING RETURNING id"""
-    result = cur.execute(query)
+    query = f"""INSERT INTO {table_name} ({', '.join(columns[1:10])}) VALUES ('{data['job_title']}', '{data['company']}', '{data['location']}', '{data['salary_and_type']}', '{data['details']}', '{data['description']}', '{date}', '{search_query}', '{url}') ON CONFLICT (url) DO NOTHING"""
+    cur.execute(query)
     conn.commit()
-    return result
+    return
 
 
 def main():
@@ -139,10 +138,9 @@ def main():
         ],
     )
 
-    page = 0
-    pages = 2
-
     for search_query in search_queries:
+        page = 0
+        pages = 2
         while page < pages:
             search_url = f"{domain}/jobs?q={search_query}&l={location}&sort=date&fromage={age}&start={page * 10}"
 
@@ -169,14 +167,10 @@ def main():
                 log.info(
                     f"Retrieved {job_details_dict['job_title']} at {job_details_dict['company']}."
                 )
-                result = insert_data(
+                insert_data(
                     table_name, columns, job_details_dict, url, search_query
                 )
-                log.info(result)
-                if result == None:
-                    log.info(f"Job already exists")
-                else:
-                    log.info(f"Job inserted")
+                log.info(f"Job inserted")
             log.info(f"Page {page} complete.")
 
             page += 1
