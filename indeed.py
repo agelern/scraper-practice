@@ -28,7 +28,8 @@ cur = conn.cursor()
 search_queries = ["data+engineer", "data+analyst", "software+engineer"]
 location = "Guildford"
 domain = "https://uk.indeed.com"
-age = 7
+# age in days.
+age = 1
 wait = random.randint(7, 18)
 date = datetime.today().strftime("%Y-%m-%d")
 
@@ -37,6 +38,14 @@ def create_table(table_name, columns):
     query = f"""CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"""
     cur.execute(query)
     conn.commit()
+
+
+def check_existing(table_name):
+    query = f"""SELECT url FROM {table_name}"""
+    cur.execute(query)
+    rows = [r[0] for r in cur.fetchall()]
+    conn.commit()
+    return rows
 
 
 def open_webpage(url):
@@ -138,6 +147,8 @@ def main():
         ],
     )
 
+    existing_urls = check_existing("raw_indeed_data")
+
     for search_query in search_queries:
         page = 0
         pages = 2
@@ -160,18 +171,22 @@ def main():
             job_urls = process_job_urls(homepage_html)
             log.info(f"Found {len(job_urls)} job cards")
             for index, url in enumerate(job_urls):
-                log.info(f"Connecting to {index + 1} of {len(job_urls)}.")
-                job_page_source = open_webpage(url)
-                html = parse_page(job_page_source)
-                job_details_dict = process_data(html)
-                log.info(
-                    f"Retrieved {job_details_dict['job_title']} at {job_details_dict['company']}."
-                )
-                insert_data(
-                    table_name, columns, job_details_dict, url, search_query
-                )
-                log.info(f"Job inserted")
-            log.info(f"Page {page} complete.")
+                if url in existing_urls:
+                    log.info(f"Job already scraped. Skipping.")
+                    continue
+                else:
+                    log.info(f"Connecting to {index + 1} of {len(job_urls)}.")
+                    job_page_source = open_webpage(url)
+                    html = parse_page(job_page_source)
+                    job_details_dict = process_data(html)
+                    log.info(
+                        f"Retrieved {job_details_dict['job_title']} at {job_details_dict['company']}."
+                    )
+                    insert_data(
+                        table_name, columns, job_details_dict, url, search_query
+                    )
+                    log.info(f"Job inserted")
+            log.info(f"Page {page + 1} complete.")
 
             page += 1
 
