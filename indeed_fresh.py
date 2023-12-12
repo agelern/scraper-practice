@@ -10,4 +10,28 @@ def drop_table(table_name):
     conn.commit()
 
 
-drop_table("raw_indeed_data")
+def create_table(table_name, columns):
+    query = f"""CREATE TABLE IF NOT EXISTS {table_name} ({', '.join(columns)});"""
+    cur.execute(query)
+    conn.commit()
+
+
+drop_table("indeed_data")
+create_table(
+    "indeed_data",
+    [
+        "id SERIAL PRIMARY KEY",
+        "raw_id INT",
+        "job_title TEXT",
+        "company TEXT",
+        "location TEXT",
+        "type TEXT",
+        "salary_start INT",
+        "salary_end INT",
+        "details TEXT",
+        "description TEXT",
+        "date_added DATE",
+        "search_term TEXT",
+        "url TEXT",
+    ],
+)
